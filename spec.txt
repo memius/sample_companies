@@ -1,0 +1,104 @@
+you have added companies.html. give it a handler, and let that be the
+response to /company url. make the companies clickable.
+
+the handler must have a post method, that returns/displays the companies.
+
+
+
+Company ID
+Name
+Address
+City
+Country
+E-mail (not required)
+Phone Number (not required)
+One or more directors and beneficial owners.
+
+
+
+
+
+display only a welcome messsage on index.
+next step, make /companies, which lists all the compaines, clickable.
+then, each compay, with details, after click.
+
+drop the authentication. it messes with the api access, i would think.
+
+
+you need to be able to attach a file to each owner/director. this file
+is a scan of their passport. must be able to export as pdf. no, attach
+as pdf, not export. associate the owner with a pdf file.
+
+
+
+what is rest? ignore. just the http request paradigm.
+
+
+
+look up curl
+curl post example:
+
+curl --data "param1=value1&param2=value2" http://example.com/resource.cgi
+or
+curl --form "fileupload=@filename.txt" http://example.com/resource.cgi
+
+in recent versions: --data-urlencode (no dash)
+
+what does curl -i do? it includes the header, so that you can send the
+stuff back to the one who sent you the curl -i request. i think.
+
+
+look up heroku. appengine is used instead. heroku just pushes an app
+to the cloud, exactly the same as appengine does.
+
+the data needs to be outputted in json? no, just use rest.
+
+
+the big thing here is this: find out how to get the service to add,
+remove, edit through the address-based api. you need to give it a
+post, with a string, i guess?
+
+the http post can be delivered a a string, or as a multipart
+expression or form data.
+
+
+sample post message:
+
+POST /path/script.cgi HTTP/1.0
+From: frog@jmarshall.com
+User-Agent: HTTPTool/1.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 32
+
+home=Cosby&favorite+flavor=flies
+
+
+important: the use for the api is by another program, not manual
+command line stuff. so, you just define the string or format that
+needs to be used, and the guy at the other end decides how to send you
+this data, whether through a program or by typing it in manually. so,
+you define a url to connect to, and what the post request should look
+like. that's it.
+
+
+
+the api is what, text based, not gui. based on urls, i guess. they
+mention less. perhaps use that to read the output?
+
+
+the javascript client is not done. use the gui you have made with
+python.
+
+
+for authentication, i use login with google, since that is a good,
+simple, safe default for webapps. for inhouse apps, a different
+method, would be used, based on the client's own authentication
+system.
+
+redundancy: two or more servers, with wake-up on shutdown. you don't
+need to do it, just describe it, naming the python technologies you
+would use.
+
+
+look into how to version control the data in the db. this will be very
+useful for your own project as well!

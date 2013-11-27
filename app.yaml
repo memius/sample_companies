@@ -1,0 +1,27 @@
+application: companies
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: True
+
+
+handlers:
+- url: /stylesheets
+  static_dir: static/stylesheets
+
+- url: /.*
+  script: main.app
+
+# - url: /scrape
+#   script: scrape.app
+#   login: admin
+
+# - url: /test
+#   script: test.app
+#   login: admin
+
+
+libraries:
+- name: jinja2
+  version: latest 
+

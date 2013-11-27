@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+
+  <body>
+    <p>
+      {{ user.nickname }} [
+      {% for key in user.companies %}
+      {{ key.id() }}, 
+      {% endfor %} ]
+
+    <p>
+    ---
+    <p>
+      <b> All companies: </b>
+    <p>
+      {% for comp in companies %}
+      {{ comp.exchange }}, {{ comp.name }}
+    <p>
+      {% endfor %} 
+    <p>
+    ---
+    <p>
+    {{ user.nickname }}
+      <a href="{{ auth_url }}">{{ auth_url_linktext }}</a>
+    <p>
+      <b> User companies: </b>
+    <p>
+    {% for pair in keys_names %}
+    <a href="company/{{ pair[0].id() }}">{{ pair[1] }}</a> 
+    <p>
+    {% endfor %}
+    <p>
+      <form action="/find_company" method=post>
+	<input type="submit" value="More Companies">
+      </form>
+    <p>
+
+  </body>
+</html>
+

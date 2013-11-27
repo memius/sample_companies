@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+
+  <body>
+    <p>
+      <b> Companies: </b>
+    <p>
+    {% for pair in keys_names %}
+    <a href="company/{{ pair[0] }}">{{ pair[1] }}</a> 
+    <p>
+    {% endfor %}
+    <p>
+
+  </body>
+</html>
+
+
+
+
+

@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+
+  <body>
+    <p>
+      <b> {{ name }} </b> ({{ exchange }}),
+      {{ num_of_articles }} articles of {{ tot_articles }}. {{ pos_rat }} positive, {{
+      neg_rat }} negative.
+    <p>
+      {% for article in articles %}
+      <a href="/article/{{ article.key().id() }}">{{ article.title }}</a>
+    <p>
+      {{ article.url }}
+    <p>
+      {{ article.datetime }}
+    <p>
+      Clean:{{ article.clean }}
+    <p>
+      Analyzed:{{ article.analyzed }}
+    <p>
+      {{ article.key().id() }}
+    <p>
+      {{ article.sentiment }}
+    <p>
+      {{ article.title_sentiment }}
+    <p>
+      {{ article.prob }}
+    <p>
+      {{ article.title_prob }}
+    <p>
+      {{ article.text }}
+    <p>
+      {% endfor %}
+    <p>
+      <form action="/unsubscribe" method=post>
+	<input type="hidden" name="key" value="{{ id }}">
+        <input type="submit" name="response" value="Unsubscribe">
+      </form>
+    <p>
+      <a href="/">Home</a>
+
+  </body>
+</html>
+
