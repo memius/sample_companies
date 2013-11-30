@@ -150,6 +150,32 @@ class MainPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('index.html')
         self.response.out.write(template.render(template_values))
 
+class AddHandler(webapp2.RequestHandler):
+    def get(self):
+#        self.response.write("add company:") 
+#        company = Company()
+
+
+        template_values = {
+            'company' : "yolo"
+            }
+
+        template = jinja_environment.get_template('add.html')
+        self.response.out.write(template.render(template_values))
+
+class AddedHandler(webapp2.RequestHandler):
+    def post(self):
+        company = Company()
+
+        company.name = self.request.get('name') 
+        company.city = self.request.get('city') 
+
+        company.put()
+
+        company_id = company.key().id()
+
+        self.redirect("company/" + str(company_id))
+
 class EditHandler(webapp2.RequestHandler):
     def get(self,edit_id):
 
@@ -451,6 +477,8 @@ app = webapp2.WSGIApplication([
         ('/company/(.*)', CompanyClickHandler),
         ('/edit/(.*)',EditHandler),
         ('/edited',EditedHandler),
+        ('/add',AddHandler),
+        ('/added',AddedHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
 

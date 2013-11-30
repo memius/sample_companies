@@ -1,3 +1,5 @@
+when you click add company, you are now redirected to the index
+page. why?
 
 
 in the company view, let there be one button for editing the
