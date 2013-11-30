@@ -1,3 +1,5 @@
+
+
 in the company view, let there be one button for editing the
 information about the company, and one for attaching a pdf-file.
 

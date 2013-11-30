@@ -151,17 +151,39 @@ class MainPage(webapp2.RequestHandler):
         self.response.out.write(template.render(template_values))
 
 class EditHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('editing')
+    def get(self,edit_id):
+
+        company = Company.get_by_id(int(edit_id))
+
+
+
 
         template_values = {
+            'company' : company
             }
 
         template = jinja_environment.get_template('edit.html')
         self.response.out.write(template.render(template_values))
 
+class EditedHandler(webapp2.RequestHandler):
+    def post(self):
+        company_id = self.request.get('company_id') #not to be printed
+        name = self.request.get('name') 
+        city = self.request.get('city') 
+
+        self.response.write("you have edited ") 
+        self.response.write(name) 
+
+        company = Company.get_by_id(int(company_id))
+        company.name = name
+        company.city = city
+        company.put()
+
+        self.redirect("company/" + str(company_id))
+
 class CompanyClickHandler(webapp2.RequestHandler):
     def get(self,company_id): # apparently, it must be company_id, not something else.
+        
         # r = self.request
         # company = re.compile("company/(?P<company>.*?)HTTP")
         # company = re.search(company,unicode(r)).group("company")
@@ -211,95 +233,99 @@ class CompaniesHandler(webapp2.RequestHandler):
         template = jinja_environment.get_template('companies.html')
         self.response.out.write(template.render(template_values))
 
-class ArticleClickHandler(webapp2.RequestHandler):
-    def get(self,article_id): 
-        article = Article.get_by_id(int(article_id))
+# class ArticleClickHandler(webapp2.RequestHandler):
+#     def get(self,article_id): 
+#         article = Article.get_by_id(int(article_id))
 
-        template_values = {
-            'id' : article.key().id(),
-            'sentiment' : article.sentiment,
-            'title' : article.title,
-            'text' : article.text
-            }
+#         template_values = {
+#             'id' : article.key().id(),
+#             'sentiment' : article.sentiment,
+#             'title' : article.title,
+#             'text' : article.text
+#             }
 
-        template = jinja_environment.get_template('article.html')
-        self.response.out.write(template.render(template_values))
+#         template = jinja_environment.get_template('article.html')
+#         self.response.out.write(template.render(template_values))
 
 
-# you need some robustness here: the user can type inc, Inc, Inc., inc.,
-# Incorporated, Corp, corp, etc. i need to be able to handle all of
-# them. maybe normalize the input?
-class FindCompanyHandler(webapp2.RequestHandler):
-    def post(self):
+# # you need some robustness here: the user can type inc, Inc, Inc., inc.,
+# # Incorporated, Corp, corp, etc. i need to be able to handle all of
+# # them. maybe normalize the input?
+# class FindCompanyHandler(webapp2.RequestHandler):
+#     def post(self):
         
-        template_values = {}
+#         template_values = {}
 
-        template = jinja_environment.get_template('find_company.html')
-        self.response.out.write(template.render(template_values))
+#         template = jinja_environment.get_template('find_company.html')
+#         self.response.out.write(template.render(template_values))
         
-    def get(self): # get() identical to post() has to be here because of the redirect from /subscribe.
+#     def get(self): # get() identical to post() has to be here because of the redirect from /subscribe.
         
-        template_values = {}
+#         template_values = {}
 
-        template = jinja_environment.get_template('find_company.html')
-        self.response.out.write(template.render(template_values))
+#         template = jinja_environment.get_template('find_company.html')
+#         self.response.out.write(template.render(template_values))
 
-class FoundCompanyHandler(webapp2.RequestHandler):
-    def post(self):
-        name_ticker = self.request.get('name_ticker')
+# class FoundCompanyHandler(webapp2.RequestHandler):
+#     def post(self):
+#         name_ticker = self.request.get('name_ticker')
 
-        q = Company.all().filter("name_lower =",name_ticker.lower()) 
-        company = q.get()
-        if company != None:
-            name = company.name
-            exchange = company.exchange
-            ticker = company.ticker
+#         q = Company.all().filter("name_lower =",name_ticker.lower()) 
+#         company = q.get()
+#         if company != None:
+#             name = company.name
+#             exchange = company.exchange
+#             ticker = company.ticker
         
-        if company == None:
-            q = Company.all().filter("ticker_lower =",name_ticker.lower())
-            company = q.get()
-            if company != None:
-                name = company.name
-                exchange = company.exchange
-                ticker = company.ticker
+#         if company == None:
+#             q = Company.all().filter("ticker_lower =",name_ticker.lower())
+#             company = q.get()
+#             if company != None:
+#                 name = company.name
+#                 exchange = company.exchange
+#                 ticker = company.ticker
 
-        if company == None:
-            url = "https://www.google.com/finance?q=" + name_ticker + "&ei=uxJjUpDELYqrwAPHWA"
+#         if company == None:
+#             url = "https://www.google.com/finance?q=" + name_ticker + "&ei=uxJjUpDELYqrwAPHWA"
 
-            result = urlfetch.fetch(url)
-            if result.status_code == 200:
-                soup = bs(result.content)
+#             result = urlfetch.fetch(url)
+#             if result.status_code == 200:
+#                 soup = bs(result.content)
 
-                title = soup.title.get_text()
+#                 title = soup.title.get_text()
 
-                name = re.compile("(?P<name>.*?):")
-                exchange = re.compile(": (?P<exchange>.*?):")
-                ticker = re.compile(":.*?:(?P<ticker>.*?) quotes & news")
+#                 name = re.compile("(?P<name>.*?):")
+#                 exchange = re.compile(": (?P<exchange>.*?):")
+#                 ticker = re.compile(":.*?:(?P<ticker>.*?) quotes & news")
 
-                exchange = re.search(exchange,title).group("exchange")
-                name = re.search(name, title).group("name")
-                ticker = re.search(ticker, title).group("ticker")
+#                 exchange = re.search(exchange,title).group("exchange")
+#                 name = re.search(name, title).group("name")
+#                 ticker = re.search(ticker, title).group("ticker")
 
-                # check here to see if what the user typed in actually gave a result on google finance.
+#                 # check here to see if what the user typed in actually gave a result on google finance.
 
-                company = Company()
-                company.name = name
-                company.name_lower = name.lower()
-                company.exchange = exchange.lower()
-                company.ticker = ticker
-                company.ticker_lower = ticker.lower()
-                company.put()
+#                 company = Company()
+#                 company.name = name
+#                 company.name_lower = name.lower()
+#                 company.exchange = exchange.lower()
+#                 company.ticker = ticker
+#                 company.ticker_lower = ticker.lower()
+#                 company.put()
 
-        company_id = company.key().id() # use name instead of id - it's better for the api.
-        template_values = {
-            'name' : name,
-            'id' : company_id,
-            'exchange' : exchange,
-            'ticker' : ticker
-            }
+#         company_id = company.key().id() # use name instead of id - it's better for the api.
+#         template_values = {
+#             'name' : name,
+#             'id' : company_id,
+#             'exchange' : exchange,
+#             'ticker' : ticker
+#             }
 
-        template = jinja_environment.get_template('found_company.html')
-        self.response.out.write(template.render(template_values))
+#         template = jinja_environment.get_template('found_company.html')
+#         self.response.out.write(template.render(template_values))
+
+
+
+
 
 
         # self.redirect("company/" + str(company_id))
@@ -422,8 +448,9 @@ app = webapp2.WSGIApplication([
         # ('/find_company',FindCompanyHandler),
         # ('/found_company',FoundCompanyHandler),
         ('/dupes',DuplicateHandler),
-        ('/company/\d*/edit',EditHandler),
         ('/company/(.*)', CompanyClickHandler),
+        ('/edit/(.*)',EditHandler),
+        ('/edited',EditedHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
 

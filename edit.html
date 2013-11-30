@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+
+  <body>
+    Edit <b>{{ company.name }}:</b>
+    <p>
+      <form action = "/edited" method = "post">
+	<LABEL for="name">Name: </LABEL>
+	<input type = "text" name = "name" value = "{{
+						    company.name }}" required = True><br>
+	<LABEL for="city">City: </LABEL>
+	<input type = "text" name = "city" value = "{{
+						    company.city }}" required = True><br>
+
+	<input type = "hidden" name = "company_id" value = "{{ company.key().id() }}">
+	<input type="submit" value="Submit">
+	</form>
+    <p>
+
+
+  </body>
+</html>
