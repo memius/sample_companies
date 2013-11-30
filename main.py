@@ -150,6 +150,16 @@ class MainPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('index.html')
         self.response.out.write(template.render(template_values))
 
+class EditHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write('editing')
+
+        template_values = {
+            }
+
+        template = jinja_environment.get_template('edit.html')
+        self.response.out.write(template.render(template_values))
+
 class CompanyClickHandler(webapp2.RequestHandler):
     def get(self,company_id): # apparently, it must be company_id, not something else.
         # r = self.request
@@ -172,9 +182,7 @@ class CompanyClickHandler(webapp2.RequestHandler):
         # company.put()
          
         template_values = {
-            'name' : company.name,
-            'address' : company.address,
-            'city' : company.city
+            'company' : company
             }
 
         template = jinja_environment.get_template('company.html')
@@ -410,11 +418,12 @@ class DuplicateHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
 #        ('/auth_return', AuthHandler),
-        ('/company/(.*)', CompanyClickHandler),
         ('/companies', CompaniesHandler),
-        ('/find_company',FindCompanyHandler),
-        ('/found_company',FoundCompanyHandler),
+        # ('/find_company',FindCompanyHandler),
+        # ('/found_company',FoundCompanyHandler),
         ('/dupes',DuplicateHandler),
+        ('/company/\d*/edit',EditHandler),
+        ('/company/(.*)', CompanyClickHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
 

@@ -1,3 +1,14 @@
+in the company view, let there be one button for editing the
+information about the company, and one for attaching a pdf-file.
+
+in the companies view, let there be a button for adding a
+company. this is where the 'required' mechanism must be.
+
+
+
+
+
+
 you have added companies.html. give it a handler, and let that be the
 response to /company url. make the companies clickable.
 
