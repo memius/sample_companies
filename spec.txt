@@ -1,9 +1,23 @@
-when you click add company, you are now redirected to the index
-page. why?
+i can't use api images, because it's a pdf, which does not count as an image.
+
+you need more than one pdf per company, but you don't need to display
+them, you only need to be able to download them through curl.
+
+the code you want is probably in 'displaying stored images' in the
+last tab in your browser. you are working on displaying the image you
+uploaded (the passport scan). remember, you want it to be pdf, so you
+want the content type header to read image/pdf, not jpeg, or png.
 
 
-in the company view, let there be one button for editing the
-information about the company, and one for attaching a pdf-file.
+the file will be stored in "file" in post, and you can add it to
+company.file, which will be a blob, i guess.
+
+test passport with some image. it must be displayed in the company view.
+
+
+
+
+in the company view, let there be one button for attaching a pdf-file.
 
 in the companies view, let there be a button for adding a
 company. this is where the 'required' mechanism must be.

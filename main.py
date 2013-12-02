@@ -5,7 +5,7 @@
 import jinja2, os, logging, pickle, webapp2, time, re
 
 from bs4 import BeautifulSoup as bs
-from google.appengine.api import users, urlfetch
+from google.appengine.api import users, urlfetch, images
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import login_required #must be webapp, not webapp2
 
@@ -191,11 +191,27 @@ class EditHandler(webapp2.RequestHandler):
         template = jinja_environment.get_template('edit.html')
         self.response.out.write(template.render(template_values))
 
+
+class PassportHandler (webapp2.RequestHandler):
+  def get(self, passport_id):
+    # account_key=self.request.get('key')
+    # account = db.get(account_key)
+    # if account.passport_scan:
+
+      company = Company.get_by_id(int(passport_id))
+      passport_scan = company.passport_scan
+
+      self.response.headers['Content-Type'] = "image/jpg" # don't know this will work - may have to be jpeg or png...
+      self.response.out.write(passport_scan)
+    # else:
+    #    self.error(404)
+
 class EditedHandler(webapp2.RequestHandler):
     def post(self):
         company_id = self.request.get('company_id') #not to be printed
         name = self.request.get('name') 
         city = self.request.get('city') 
+        passport = images.resize(self.request.get('passport'), 96, 96)
 
         self.response.write("you have edited ") 
         self.response.write(name) 
@@ -203,6 +219,7 @@ class EditedHandler(webapp2.RequestHandler):
         company = Company.get_by_id(int(company_id))
         company.name = name
         company.city = city
+        company.passport_scan = db.Blob(str(passport))
         company.put()
 
         self.redirect("company/" + str(company_id))
@@ -479,6 +496,7 @@ app = webapp2.WSGIApplication([
         ('/edited',EditedHandler),
         ('/add',AddHandler),
         ('/added',AddedHandler),
+        ('/passport/(.*)', PassportHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
 

@@ -51,6 +51,7 @@ class Company(db.Model):
 #    articles = db.ReferenceProperty(Article) #not needed: do this: articles = company.articles.get()
     titles = db.StringListProperty()
     finished_scraping = db.BooleanProperty(False)
+    passport_scan = db.BlobProperty()
 #    user = db.ReferenceProperty(UserPrefs, collection_name = "companies")
 #    recommendation = db.StringProperty() #'buy', 'hold' or 'sell'
 #    confidence = db.FloatProperty() #a number from 0.0 to 1.0
