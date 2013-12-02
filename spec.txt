@@ -1,3 +1,14 @@
+
+
+you need to have something that appends new owners, passports and
+directors to the lists of those. they are their own classes.
+
+det kan se ut som om du nå har klart å lagre (men ikke displaye) pdf'en.
+
+look at this: it may show you how to store pdfs. remember, you don't
+need to display them, only get them through curl.
+http://stackoverflow.com/questions/9550716/how-to-save-generated-pdf-with-reportlab-to-datastore-in-app-engine-python
+
 i can't use api images, because it's a pdf, which does not count as an image.
 
 you need more than one pdf per company, but you don't need to display

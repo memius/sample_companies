@@ -13,13 +13,6 @@ class UserPrefs(db.Model):
     # name = db.StringProperty()
     # companies is an implied property - see Company class.
 
-class Director(db.Model):
-    name = db.StringProperty()
-    # companies is an implied property - see Company class.
-
-class Owner(db.Model):
-    name = db.StringProperty()
-    # companies is an implied property - see Company class.
 
 # Company ID
 # Name
@@ -58,6 +51,10 @@ class Company(db.Model):
 #    user = db.ReferenceProperty(User, collection_name = "companies")
 
     @property
+    def passport(self):
+        return Passport.gql("WHERE companies = :1", self.key()) 
+
+    @property
     def director(self):
         return Director.gql("WHERE companies = :1", self.key()) 
 
@@ -69,3 +66,14 @@ def companies_key(companies_name=None):
   """Constructs a Datastore key for a Companies entity with companies_name."""
   return db.Key.from_path('Companies', companies_name or 'default_companies')
 
+class Passport(db.Model):
+    content = db.BlobProperty()
+    company = db.ReferenceProperty(Company, collection_name = "passports")
+
+class Director(db.Model):
+    name = db.StringProperty()
+    company = db.ReferenceProperty(Company, collection_name = "directors")
+
+class Owner(db.Model):
+    name = db.StringProperty()
+    company = db.ReferenceProperty(Company, collection_name = "owners")

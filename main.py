@@ -5,14 +5,14 @@
 import jinja2, os, logging, pickle, webapp2, time, re
 
 from bs4 import BeautifulSoup as bs
-from google.appengine.api import users, urlfetch, images
+from google.appengine.api import users, urlfetch
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import login_required #must be webapp, not webapp2
 
 #import utils, crawl, sites, fetch, naive_bayes, scrape, duplicates, clean, analyze
 import duplicates
 
-from models import Company, UserPrefs
+from models import Company, UserPrefs, Passport, Owner, Director
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -201,7 +201,8 @@ class PassportHandler (webapp2.RequestHandler):
       company = Company.get_by_id(int(passport_id))
       passport_scan = company.passport_scan
 
-      self.response.headers['Content-Type'] = "image/jpg" # don't know this will work - may have to be jpeg or png...
+      self.response.headers['Content-Type'] = "application/pdf" 
+#      self.response.headers['Content-Disposition'] = "attachment; filename=output.pdf" 
       self.response.out.write(passport_scan)
     # else:
     #    self.error(404)
@@ -211,7 +212,8 @@ class EditedHandler(webapp2.RequestHandler):
         company_id = self.request.get('company_id') #not to be printed
         name = self.request.get('name') 
         city = self.request.get('city') 
-        passport = images.resize(self.request.get('passport'), 96, 96)
+#        passport = images.resize(self.request.get('passport'), 96, 96)
+        passport = self.request.get('passport')
 
         self.response.write("you have edited ") 
         self.response.write(name) 
@@ -219,8 +221,15 @@ class EditedHandler(webapp2.RequestHandler):
         company = Company.get_by_id(int(company_id))
         company.name = name
         company.city = city
-        company.passport_scan = db.Blob(str(passport))
-        company.put()
+#        company.passport_scan = db.Blob(str(passport))
+#        company.passport_scan = db.Blob(passport)
+        company.put()   
+
+        p = Passport()
+        p.content = db.Blob(str(passport))
+        p.company = company.key()
+        p.put()
+        # something for owners and directiors as well
 
         self.redirect("company/" + str(company_id))
 
