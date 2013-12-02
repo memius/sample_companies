@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+
+  <body>
+      <form action = "/edited" method = "post" enctype "multipart/form-data">
+	<LABEL for="director">Director name: </LABEL>
+	<input type = "text" name = "director_name">
+	<br>
+	Choose passport file for director:
+	<input type = "file" name = "passport">
+	<input type = "hidden" name = "company_id" value = "{{ company.key().id() }}">
+	<br>
+	<input type="submit" value="Done Editing">
+      </form>
+  </body>
+</html>
