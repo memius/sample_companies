@@ -44,15 +44,11 @@ class Company(db.Model):
 #    articles = db.ReferenceProperty(Article) #not needed: do this: articles = company.articles.get()
     titles = db.StringListProperty()
     finished_scraping = db.BooleanProperty(False)
-    passport_scan = db.BlobProperty()
+#    passport_scan = db.BlobProperty()
 #    user = db.ReferenceProperty(UserPrefs, collection_name = "companies")
 #    recommendation = db.StringProperty() #'buy', 'hold' or 'sell'
 #    confidence = db.FloatProperty() #a number from 0.0 to 1.0
 #    user = db.ReferenceProperty(User, collection_name = "companies")
-
-    @property
-    def passport(self):
-        return Passport.gql("WHERE companies = :1", self.key()) 
 
     @property
     def director(self):
@@ -66,14 +62,24 @@ def companies_key(companies_name=None):
   """Constructs a Datastore key for a Companies entity with companies_name."""
   return db.Key.from_path('Companies', companies_name or 'default_companies')
 
-class Passport(db.Model):
-    content = db.BlobProperty()
-    company = db.ReferenceProperty(Company, collection_name = "passports")
-
 class Director(db.Model):
     name = db.StringProperty()
     company = db.ReferenceProperty(Company, collection_name = "directors")
 
+    @property
+    def passport(self):
+        return Passport.gql("WHERE directors = :1", self.key()) 
+
 class Owner(db.Model):
     name = db.StringProperty()
     company = db.ReferenceProperty(Company, collection_name = "owners")
+
+    @property
+    def passport(self):
+        return Passport.gql("WHERE owners = :1", self.key()) 
+
+class Passport(db.Model):
+    content = db.BlobProperty()
+    owner = db.ReferenceProperty(Owner, collection_name = "passports")
+    director = db.ReferenceProperty(Director, collection_name = "passports")
+

@@ -10,22 +10,20 @@
       {{ company.address }}
     <p>
       {{ company.city }}
+    <p>Owners:
+      {% for owner in company.owners %}
+      {{ owner.name }}, 
+      {% endfor %}
+    <p>
+    <p>Directors:
+      {% for director in company.directors %}
+      {{ director.name }}, 
+      {% endfor %}
     <p>
       <a href="/">Home</a>
     <p>
       <a href="/edit/{{ company.key().id() }}">Edit</a>
     <p>
-      <a href="/passport/{{ company.key().id() }}">View Passport Scan</a>
-    <p>
-      <img src="passport?key={{ company.key() }}" alt="passport scan"></img>
-    <p>
-      <br>
-      Upload Passport Scan:
-      <form action = "/edited" method = "post" enctype "multipart/form-data">
-	<input type = "file" name = "passport">
-	<input type = "hidden" name = "company_id" value = "{{ company.key().id() }}">
-	<input type="submit" value="Upload">
-      </form>
   </body>
 </html>
 

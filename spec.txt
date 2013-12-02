@@ -1,3 +1,36 @@
+perhaps make directors clickable, to view passports?
+
+
+make a separate owner,director,passport page, apart from edit.
+
+
+may be problem adding owner.company = company
+
+      <a href="/passport/{{ company.key().id() }}">View Passport Scan</a>
+    <p>
+      <img src="passport?key={{ company.key() }}" alt="passport scan"></img>
+    <p>
+
+
+
+why does the name and city disappear when you push the upload button?
+because you are taken to the edited page, somehow, i guess.
+
+neven mind about adding more than one owner in the client. this can be
+done with the curl syntax.
+
+
+in edit, have a button for adding more owners (and directors). have a
+button for each of them to upload a passport.
+
+
+one passport for each owner or director. passport is an attribute of
+the owner, not the company.
+
+so, you upload a passport for a director, and then attach the director
+to the company. the passport is accessed by company.owner[0].passport
+or something.
+
 
 
 you need to have something that appends new owners, passports and

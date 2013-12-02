@@ -176,22 +176,6 @@ class AddedHandler(webapp2.RequestHandler):
 
         self.redirect("company/" + str(company_id))
 
-class EditHandler(webapp2.RequestHandler):
-    def get(self,edit_id):
-
-        company = Company.get_by_id(int(edit_id))
-
-
-
-
-        template_values = {
-            'company' : company
-            }
-
-        template = jinja_environment.get_template('edit.html')
-        self.response.out.write(template.render(template_values))
-
-
 class PassportHandler (webapp2.RequestHandler):
   def get(self, passport_id):
     # account_key=self.request.get('key')
@@ -207,29 +191,98 @@ class PassportHandler (webapp2.RequestHandler):
     # else:
     #    self.error(404)
 
+class OwnersHandler(webapp2.RequestHandler):
+    def get(self,owners_id):
+        company = Company.get_by_id(int(owners_id))
+
+        template_values = {
+            'company' : company
+            }
+
+        template = jinja_environment.get_template('owners.html')
+        self.response.out.write(template.render(template_values))
+
+class DirectorsHandler(webapp2.RequestHandler):
+    def get(self,directors_id):
+        company = Company.get_by_id(int(directors_id))
+
+        template_values = {
+            'company' : company
+            }
+
+        template = jinja_environment.get_template('directors.html')
+        self.response.out.write(template.render(template_values))
+
+class EditHandler(webapp2.RequestHandler):
+    def get(self,edit_id):
+        company = Company.get_by_id(int(edit_id))
+
+        template_values = {
+            'company' : company
+            }
+
+        template = jinja_environment.get_template('edit.html')
+        self.response.out.write(template.render(template_values))
+
+#    def post(self,edit_id):
+        # takes care of uploading passport pdf and entering name of owners, directors
+        
+
+
 class EditedHandler(webapp2.RequestHandler):
     def post(self):
         company_id = self.request.get('company_id') #not to be printed
-        name = self.request.get('name') 
-        city = self.request.get('city') 
-#        passport = images.resize(self.request.get('passport'), 96, 96)
-        passport = self.request.get('passport')
-
-        self.response.write("you have edited ") 
-        self.response.write(name) 
-
         company = Company.get_by_id(int(company_id))
-        company.name = name
-        company.city = city
+
+        name = self.request.get('name') 
+        if name:
+            company.name = name
+            
+        city = self.request.get('city') 
+        if city:
+            company.city = city
+#        passport = images.resize(self.request.get('passport'), 96, 96)
+#        passport = self.request.get('passport')
+
+#        self.response.write("you have edited ") 
+#        self.response.write(name) 
+
 #        company.passport_scan = db.Blob(str(passport))
 #        company.passport_scan = db.Blob(passport)
-        company.put()   
 
-        p = Passport()
-        p.content = db.Blob(str(passport))
-        p.company = company.key()
-        p.put()
-        # something for owners and directiors as well
+
+        owner_name = self.request.get('owner_name')
+        if owner_name:
+            owner = Owner()
+            owner.name = owner_name
+            owner.company = company.key()
+            passport = self.request.get('passport')
+            if passport:
+                pass
+#                owner.passport = str(passport.get_content())
+#                owner.passport = db.Blob(passport)
+
+            owner.put()
+
+        director_name = self.request.get('director_name')
+        if director_name:
+            director = Director()
+            director.name = director_name
+            director.company = company.key()
+            passport = self.request.get('passport')
+            if passport:
+                pass
+#                director.passport = str(passport.get_content())
+#                director.passport = db.Blob(passport)
+
+            director.put()
+
+        # p = Passport()
+        # p.content = db.Blob(str(passport))
+        # p.company = company.key()
+        # p.put()
+
+        company.put()   
 
         self.redirect("company/" + str(company_id))
 
@@ -506,6 +559,8 @@ app = webapp2.WSGIApplication([
         ('/add',AddHandler),
         ('/added',AddedHandler),
         ('/passport/(.*)', PassportHandler),
+        ('/owners/(.*)',OwnersHandler),
+        ('/directors/(.*)',DirectorsHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
 

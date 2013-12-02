@@ -15,10 +15,13 @@
 						    company.city }}" required = True><br>
 
 	<input type = "hidden" name = "company_id" value = "{{ company.key().id() }}">
-	<input type="submit" value="Submit">
+	<br>
+	<input type="submit" value="Done Editing">
 	</form>
-    <p>
 
+      <a href="/owners/{{ company.key().id() }}">Add owner</a>
+      <a href="/directors/{{ company.key().id() }}">Add director</a>
+    <p>
 
   </body>
 </html>
