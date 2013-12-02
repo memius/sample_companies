@@ -258,9 +258,11 @@ class EditedHandler(webapp2.RequestHandler):
             owner.company = company.key()
             passport = self.request.get('passport')
             if passport:
-                pass
-#                owner.passport = str(passport.get_content())
-#                owner.passport = db.Blob(passport)
+#                pass
+                p = Passport()
+                p.content = db.Blob(str(passport))
+                p.owner = owner.key()
+                p.put()
 
             owner.put()
 

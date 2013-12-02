@@ -1,3 +1,18 @@
+this is supposed to be code for storing pdf to datastore (not
+blobstore):
+
+  pdf = StringIO.StringIO()
+
+        doc = SimpleDocTemplate(pdf, pagesize=letter)
+        doc.build(story)
+
+        content = pdf.getvalue()
+
+        blob = model.PdfTable()
+        blob.archivoBlob = db.Blob(content)
+        blob.put()
+
+
 perhaps make directors clickable, to view passports?
 
 
