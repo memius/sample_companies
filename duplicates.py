@@ -12,7 +12,7 @@ def companies():
     q.order("datetime")
     companies = q.fetch(1000)
     duplicates = []
-    checked = []
+#    checked = []
     for company in companies:
 
         # if company.name == "General Electric Company":
@@ -24,12 +24,12 @@ def companies():
             db.delete(company)
         else:
             duplicates.append(company.name)
-            checked.append(company)
+#            checked.append(company)
 
-    duplicates = []
-    for company in checked:
-        if company.ticker in duplicates:
-            db.delete(company)
-        else:
-            duplicates.append(company.ticker)
+    # duplicates = []
+    # for company in checked:
+    #     if company.ticker in duplicates:
+    #         db.delete(company)
+    #     else:
+    #         duplicates.append(company.ticker)
 

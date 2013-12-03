@@ -1,9 +1,24 @@
+db is empty. need to put some companies in. do it in main.
+
+
 deploy to appengine (version 2) let them know it will be up for about
 a week.
 
-check that curl works towards the online version.
+check that curl works towards the online version. especially that you
+can get at the pdfs.
 
+ORIENTATION:
+'curl -i transfarmr.dictatr.com/companies' yields a list, formatted as
+html, of the companies in the db. from this list, you can glean the
+company id of each company.
 
+'curl -i transfarmr.dictatr.com/company/[company_id]' yields the
+details of one company.
+
+'curl -i transfarmr.dictatr.com/edit ... hm.
+
+to show the pdf, i guess i'll make the owners clickable, and have that
+show the pdf.
 
 
 

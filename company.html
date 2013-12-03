@@ -18,7 +18,7 @@
       {{ company.phone_number }}
     <p>Owners:
       {% for owner in company.owners %}
-      {{ owner.name }}, 
+      <a href="/owner/{{ owner.key().id() }}">{{ owner.name }}</a>
       {% endfor %}
     <p>
     <p>Directors:

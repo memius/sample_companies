@@ -4,7 +4,6 @@
 
 import jinja2, os, logging, pickle, webapp2, time, re
 
-from bs4 import BeautifulSoup as bs
 from google.appengine.api import users, urlfetch
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import login_required #must be webapp, not webapp2
@@ -138,6 +137,28 @@ class MainPage(webapp2.RequestHandler):
 # #        article_objects = q # debug only
 #         ####db.delete(article_objects) stop doing this - delete attributes instead, run scripts to add new attributes
 
+
+# part of the sample app:
+        # company = Company()
+        # company.name = "Google Inc"
+        # company.address = "the other road"
+        # company.city = "mountain view"
+        # company.country = "USA"
+        # company.email = "larry@gmail.com"
+        # company.phone_number = 55588800
+        # company.put()
+
+        # company = Company()
+        # company.name = "Facebook Inc"
+        # company.address = "some street"
+        # company.city = "menlo park"
+        # company.country = "USA"
+        # company.email = "billy@fb.com"
+        # company.phone_number = 55588899
+        # company.put()
+
+
+
         template_values = {
 #            'keys_names' : keys_names,
 #            'companies' : companies, 
@@ -191,7 +212,7 @@ class PassportHandler (webapp2.RequestHandler):
     # else:
     #    self.error(404)
 
-class OwnersHandler(webapp2.RequestHandler):
+class OwnersHandler(webapp2.RequestHandler): # lets you add an owner
     def get(self,owners_id):
         company = Company.get_by_id(int(owners_id))
 
@@ -200,6 +221,19 @@ class OwnersHandler(webapp2.RequestHandler):
             }
 
         template = jinja_environment.get_template('owners.html')
+        self.response.out.write(template.render(template_values))
+
+class OwnerHandler(webapp2.RequestHandler): # shows the passport of one owner
+    def get(self,owner_id):
+        
+
+        company = Company.get_by_id(int(owner_id))
+
+        template_values = {
+            'company' : "yabbadabbadoo"
+            }
+
+        template = jinja_environment.get_template('owner.html')
         self.response.out.write(template.render(template_values))
 
 class DirectorsHandler(webapp2.RequestHandler):
@@ -238,9 +272,26 @@ class EditedHandler(webapp2.RequestHandler):
         if name:
             company.name = name
             
+        address = self.request.get('address') 
+        if address:
+            company.address = address
+
         city = self.request.get('city') 
         if city:
             company.city = city
+
+        country = self.request.get('country') 
+        if country:
+            company.country = country
+
+        email = self.request.get('email') 
+        if email:
+            company.email = email
+
+        phone_number = self.request.get('phone_number') 
+        if phone_number:
+            company.phone_number = int(phone_number)
+
 #        passport = images.resize(self.request.get('passport'), 96, 96)
 #        passport = self.request.get('passport')
 
@@ -318,13 +369,6 @@ class CompanyClickHandler(webapp2.RequestHandler):
 
         template = jinja_environment.get_template('company.html')
         self.response.out.write(template.render(template_values))
-
-#given:
-# <input type="text" name="username">
-class SomeHandler(webapp2.RequestHandler):
-    def post(self):
-        name = self.request.get('username') # should perhaps be 'name'?
-        self.response.write(name) 
 
 class CompaniesHandler(webapp2.RequestHandler):
     def get(self):
@@ -564,6 +608,7 @@ app = webapp2.WSGIApplication([
         ('/added',AddedHandler),
         ('/passport/(.*)', PassportHandler),
         ('/owners/(.*)',OwnersHandler),
+        ('/owner/(.*)',OwnerHandler),
         ('/directors/(.*)',DirectorsHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
