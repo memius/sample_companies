@@ -1,3 +1,20 @@
+deploy to appengine (version 2) let them know it will be up for about
+a week.
+
+check that curl works towards the online version.
+
+
+
+
+
+remove the home link in company view.
+
+add the rest of the attributes in add and edit and view, not just name and city.
+
+
+
+
+
 the owner.passport relation should be one to one, so that there is no
 passport class, only an owner.passport attribute.
 

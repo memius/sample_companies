@@ -10,6 +10,12 @@
       {{ company.address }}
     <p>
       {{ company.city }}
+    <p>
+      {{ company.country }}
+    <p>
+      {{ company.email }}
+    <p>
+      {{ company.phone_number }}
     <p>Owners:
       {% for owner in company.owners %}
       {{ owner.name }}, 
@@ -19,8 +25,6 @@
       {% for director in company.directors %}
       {{ director.name }}, 
       {% endfor %}
-    <p>
-      <a href="/">Home</a>
     <p>
       <a href="/edit/{{ company.key().id() }}">Edit</a>
     <p>
