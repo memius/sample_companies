@@ -12,7 +12,7 @@ from google.appengine.ext.webapp.util import login_required #must be webapp, not
 #import utils, crawl, sites, fetch, naive_bayes, scrape, duplicates, clean, analyze
 import duplicates
 
-from models import Company, UserPrefs, Passport, Owner, Director
+from models import Company, UserPrefs, Owner, Director
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -259,10 +259,11 @@ class EditedHandler(webapp2.RequestHandler):
             passport = self.request.get('passport')
             if passport:
 #                pass
-                p = Passport()
-                p.content = db.Blob(str(passport))
-                p.owner = owner.key()
-                p.put()
+                owner.passport = db.Blob(str(passport))
+                # p = Passport()
+                # p.content = db.Blob(str(passport))
+                # p.owner = owner.key()
+                # p.put()
 
             owner.put()
 
@@ -273,7 +274,8 @@ class EditedHandler(webapp2.RequestHandler):
             director.company = company.key()
             passport = self.request.get('passport')
             if passport:
-                pass
+                #pass
+                director.passport = db.Blob(str(passport))
 #                director.passport = str(passport.get_content())
 #                director.passport = db.Blob(passport)
 

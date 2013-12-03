@@ -64,22 +64,24 @@ def companies_key(companies_name=None):
 
 class Director(db.Model):
     name = db.StringProperty()
+    passport = db.BlobProperty()
     company = db.ReferenceProperty(Company, collection_name = "directors")
 
-    @property
-    def passport(self):
-        return Passport.gql("WHERE directors = :1", self.key()) 
+    # @property
+    # def passport(self):
+    #     return Passport.gql("WHERE directors = :1", self.key()) 
 
 class Owner(db.Model):
     name = db.StringProperty()
+    passport = db.BlobProperty()
     company = db.ReferenceProperty(Company, collection_name = "owners")
 
-    @property
-    def passport(self):
-        return Passport.gql("WHERE owners = :1", self.key()) 
+    # @property
+    # def passport(self):
+    #     return Passport.gql("WHERE owners = :1", self.key()) 
 
-class Passport(db.Model):
-    content = db.BlobProperty()
-    owner = db.ReferenceProperty(Owner, collection_name = "passports")
-    director = db.ReferenceProperty(Director, collection_name = "passports")
+# class Passport(db.Model):
+#     content = db.BlobProperty()
+#     owner = db.ReferenceProperty(Owner, collection_name = "passports")
+#     director = db.ReferenceProperty(Director, collection_name = "passports")
 

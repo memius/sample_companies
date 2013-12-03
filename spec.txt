@@ -1,3 +1,10 @@
+the owner.passport relation should be one to one, so that there is no
+passport class, only an owner.passport attribute.
+
+you managed to store pdf for owner. make sure director gets the same
+treatment, and then deal with curl.
+
+
 this is supposed to be code for storing pdf to datastore (not
 blobstore):
 
