@@ -2,7 +2,7 @@
 
 #only displays the finished products that scrape and bayesian have stored to db. and only at users' requests, NOT as cron jobs.
 
-import jinja2, os, logging, pickle, webapp2, time, re
+import jinja2, os, logging, pickle, webapp2, time, re, sys, StringIO
 
 from google.appengine.api import users, urlfetch
 from google.appengine.ext import db
@@ -225,12 +225,13 @@ class OwnersHandler(webapp2.RequestHandler): # lets you add an owner
 
 class OwnerHandler(webapp2.RequestHandler): # shows the passport of one owner
     def get(self,owner_id):
-        
+        owner = Owner.get_by_id(int(owner_id))
 
-        company = Company.get_by_id(int(owner_id))
+        sizes = [sys.getsizeof(owner.name),sys.getsizeof(owner.passport)]
 
         template_values = {
-            'company' : "yabbadabbadoo"
+            'owner' : owner,
+            'sizes' : sizes
             }
 
         template = jinja_environment.get_template('owner.html')
@@ -307,14 +308,34 @@ class EditedHandler(webapp2.RequestHandler):
             owner = Owner()
             owner.name = owner_name
             owner.company = company.key()
-            passport = self.request.get('passport')
-            if passport:
+
+            # this should work, according to nick johnson. why doesn't it?:
+            p = self.request.POST['passport'] # should give me both value and mimetype (p.value and p.type)
+#            p = self.request.get('passport') # should give me the value/content/data of the file
+            if p:
 #                pass
-                owner.passport = db.Blob(str(passport))
+#                pdf = StringIO.StringIO()
+                owner.passport = p.value
+#                owner.passport = db.Blob(p.value)
+#                owner.passport = db.Blob(str(p))
                 # p = Passport()
                 # p.content = db.Blob(str(passport))
                 # p.owner = owner.key()
                 # p.put()
+
+
+# ---------
+
+#  output = StringIO.StringIO()
+
+#     try:
+#         client.convertURI("example.com", output)
+#         Report.pdf = db.Blob(output.getvalue())
+#         Report.put()  
+#     except pdfcrowd.Error, why:
+#         logging.error('PDF creation failed %s' % why)
+
+# --------------
 
             owner.put()
 
@@ -339,6 +360,7 @@ class EditedHandler(webapp2.RequestHandler):
 
         company.put()   
 
+        # self.redirect(self.request.url) # redirect back to same page
         self.redirect("company/" + str(company_id))
 
 class CompanyClickHandler(webapp2.RequestHandler):

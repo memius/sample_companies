@@ -1,4 +1,73 @@
+now, this probably has your answer:
+http://stackoverflow.com/questions/2935918/app-engine-save-response-from-an-api-in-the-data-store-as-file-blob
+
+
+you are indeed only storing the title of the pdf, as confirmed by
+sizes. why?
+
+this is supposed to be code for storing pdf to datastore (not
+blobstore):
+
+
+stringio
+simpledoctemplate
+story
+getvalue
+model.pdftable
+archivoblob (probably archiveblob)
+
+
+  pdf = StringIO.StringIO()
+
+        doc = SimpleDocTemplate(pdf, pagesize=letter)  #A4)
+        doc.build(story)
+
+        content = pdf.getvalue()
+
+        blob = model.PdfTable()
+        blob.archiveBlob = db.Blob(content)
+        blob.put()
+
+-------------------------
+
+#this generates the pdf:
+pdf = StringIO()
+
+doc = SimpleDocTemplate(pdf, pagesize=letter)
+doc.build(story) 
+
+#this gets the content of generated pdf
+content = pdf.getvalue()
+
+#this saves the content to db
+pdfStorage = PdfStorage(pdfContent = content);   # class from models. pdfcontent is a blobproperty
+pdfStorage.put()
+
+#output to browser 
+handler.response.write(content)
+
+
+
+
+
+the src for the pdf needs to be a key, so the passport must be it's
+own object after all. referenceproperty.
+
+if you use object tag instead of embed tag, you can use data instead
+of src, which seems to be able to handle things like
+{{owner.passport}}
+
+<OBJECT data="YourFile.pdf" TYPE="application/x-pdf" TITLE="SamplePdf" 
+WIDTH=200 HEIGHT=100>
+    <a href="YourFile.pdf">shree</a> 
+</object>
+
+
+seems only the pdf title is stored, not the pdf content.
+
+
 db is empty. need to put some companies in. do it in main.
+
 
 
 deploy to appengine (version 2) let them know it will be up for about
@@ -37,19 +106,6 @@ you managed to store pdf for owner. make sure director gets the same
 treatment, and then deal with curl.
 
 
-this is supposed to be code for storing pdf to datastore (not
-blobstore):
-
-  pdf = StringIO.StringIO()
-
-        doc = SimpleDocTemplate(pdf, pagesize=letter)
-        doc.build(story)
-
-        content = pdf.getvalue()
-
-        blob = model.PdfTable()
-        blob.archivoBlob = db.Blob(content)
-        blob.put()
 
 
 perhaps make directors clickable, to view passports?

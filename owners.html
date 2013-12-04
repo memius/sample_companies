@@ -4,13 +4,13 @@
   </head>
 
   <body>
-      <form action = "/edited" method = "post" enctype "multipart/form-data">
-	<LABEL for="owner">Owner name: </LABEL>
-	<input type = "text" name = "owner_name">
-	<br>
+      <form action="/edited" method="post" enctype="multipart/form-data">
 	Choose passport file for owner:
-	<input type = "file" name = "passport">
-	<input type = "hidden" name = "company_id" value = "{{ company.key().id() }}">
+	<input type="file" name="passport">
+	<input type="hidden" name="company_id" value="{{ company.key().id() }}">
+	<br>
+	<LABEL for="owner">Owner name: </LABEL>
+	<input type="text" name="owner_name">
 	<br>
 	<input type="submit" value="Done Editing">
       </form>
