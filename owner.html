@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+  <body>
+    <p>
+      {{ owner.name }}
+    <p>
+      {% for size in sizes %}
+      NN{{ size }}NN
+      {% endfor %}
+    <p>
+      <OBJECT data="{{ owner.passport }}" TYPE="application/pdf" TITLE="passport" 
+	      WIDTH=600 HEIGHT=500>
+      </object>
+
+      <td CLASS="TextObject">
+	<p>
+	  <iframe title="PDF in an i-Frame" src="{{ owner.passport }}"
+		  height="500" width="400" >
+	  </iframe>bobba</p>
+      </td>
+    <p>
+  </body>
+</html>
+
+

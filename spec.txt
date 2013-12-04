@@ -1,3 +1,47 @@
+hva med å bare gjøre 
+
+self.response.write(pdf) i ownerhandler? det er kanskje det riktigste.
+
+
+they're telling me the src needs to be a pointer, not the actual
+content.
+
+
+  <embed src="{{ p }}" width="500"
+	 height="375" type="application/pdf" alt="Passport scan">
+
+
+
+      <a href="YourFile.pdf">shree</a> 
+
+
+      <td CLASS="TextObject">
+	<p>
+	  <iframe title="PDF in an i-Frame" src="{{ owner.passport }}"
+		  height="500" width="400" >
+	  </iframe>bobba</p>
+      </td>
+
+owner.passport is now containing what it should, but i can't display
+it. ascii encoding problem in owner.html.
+
+when i define content-type in ownerhandler, it understands that it's
+supposed to show a pdf, but that does not make the encoding problem go away.
+
+
+perhaps defining its content-type in ownerhandler before sending it to owner.html will
+do the trick?
+
+now, p contains something that is not ascii text. good news, but
+unicode madness coming up!
+
+
+
+now, the contents of owner.passport is None, not the title, like it
+used to be. silent fail!
+
+
+
 now, this probably has your answer:
 http://stackoverflow.com/questions/2935918/app-engine-save-response-from-an-api-in-the-data-store-as-file-blob
 

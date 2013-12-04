@@ -2,7 +2,7 @@
 
 #only displays the finished products that scrape and bayesian have stored to db. and only at users' requests, NOT as cron jobs.
 
-import jinja2, os, logging, pickle, webapp2, time, re, sys, StringIO
+import jinja2, os, logging, pickle, webapp2, time, re, sys, base64
 
 from google.appengine.api import users, urlfetch
 from google.appengine.ext import db
@@ -229,13 +229,20 @@ class OwnerHandler(webapp2.RequestHandler): # shows the passport of one owner
 
         sizes = [sys.getsizeof(owner.name),sys.getsizeof(owner.passport)]
 
-        template_values = {
-            'owner' : owner,
-            'sizes' : sizes
-            }
+        self.response.headers['Content-Type']="application/pdf"
 
-        template = jinja_environment.get_template('owner.html')
-        self.response.out.write(template.render(template_values))
+        self.response.write(owner.passport)
+
+
+# #        p = base64.b64decode(owner.passport)
+
+#         template_values = {
+#             'owner' : owner,
+#             'sizes' : sizes
+#             }
+
+#         template = jinja_environment.get_template('owner.html')
+#         self.response.out.write(template.render(template_values))
 
 class DirectorsHandler(webapp2.RequestHandler):
     def get(self,directors_id):
@@ -310,13 +317,18 @@ class EditedHandler(webapp2.RequestHandler):
             owner.company = company.key()
 
             # this should work, according to nick johnson. why doesn't it?:
-            p = self.request.POST['passport'] # should give me both value and mimetype (p.value and p.type)
-#            p = self.request.get('passport') # should give me the value/content/data of the file
+#            p = self.request.POST['passport'] # should give me both value and mimetype (p.value and p.type)
+            p = self.request.get('passport') # should give me the value/content/data of the file
             if p:
 #                pass
 #                pdf = StringIO.StringIO()
-                owner.passport = p.value
+#                owner.passport = db.Blob(open(p.value, "rb").read())
+#                owner.passport = db.Blob(p)
+                owner.passport = p
+#                owner.passport = base64.b64encode(p)
+#                owner.passport = p.value
 #                owner.passport = db.Blob(p.value)
+#                owner.passport = db.Blob(str(p.value))
 #                owner.passport = db.Blob(str(p))
                 # p = Passport()
                 # p.content = db.Blob(str(passport))
