@@ -189,7 +189,11 @@ class AddedHandler(webapp2.RequestHandler):
         company = Company()
 
         company.name = self.request.get('name') 
+        company.address = self.request.get('address') 
         company.city = self.request.get('city') 
+        company.country = self.request.get('country') 
+        company.email = self.request.get('email') 
+        company.phone_number = int(self.request.get('phone_number'))
 
         company.put()
 
@@ -223,28 +227,7 @@ class OwnersHandler(webapp2.RequestHandler): # lets you add an owner
         template = jinja_environment.get_template('owners.html')
         self.response.out.write(template.render(template_values))
 
-class OwnerHandler(webapp2.RequestHandler): # shows the passport of one owner
-    def get(self,owner_id):
-        owner = Owner.get_by_id(int(owner_id))
-
-        sizes = [sys.getsizeof(owner.name),sys.getsizeof(owner.passport)]
-
-        self.response.headers['Content-Type']="application/pdf"
-
-        self.response.write(owner.passport)
-
-
-# #        p = base64.b64decode(owner.passport)
-
-#         template_values = {
-#             'owner' : owner,
-#             'sizes' : sizes
-#             }
-
-#         template = jinja_environment.get_template('owner.html')
-#         self.response.out.write(template.render(template_values))
-
-class DirectorsHandler(webapp2.RequestHandler):
+class DirectorsHandler(webapp2.RequestHandler): # lets you add an director
     def get(self,directors_id):
         company = Company.get_by_id(int(directors_id))
 
@@ -254,6 +237,22 @@ class DirectorsHandler(webapp2.RequestHandler):
 
         template = jinja_environment.get_template('directors.html')
         self.response.out.write(template.render(template_values))
+
+class OwnerHandler(webapp2.RequestHandler): # shows the passport of one owner (owner.html is now redundant)
+    def get(self,owner_id):
+        owner = Owner.get_by_id(int(owner_id))
+
+#        sizes = [sys.getsizeof(owner.name),sys.getsizeof(owner.passport)]
+
+        self.response.headers['Content-Type']="application/pdf"
+
+        self.response.write(owner.passport)
+
+class DirectorHandler(webapp2.RequestHandler):
+    def get(self,director_id):
+        director = Director.get_by_id(int(director_id))
+        self.response.headers['Content-Type']="application/pdf"
+        self.response.write(director.passport)
 
 class EditHandler(webapp2.RequestHandler):
     def get(self,edit_id):
@@ -320,34 +319,9 @@ class EditedHandler(webapp2.RequestHandler):
 #            p = self.request.POST['passport'] # should give me both value and mimetype (p.value and p.type)
             p = self.request.get('passport') # should give me the value/content/data of the file
             if p:
-#                pass
-#                pdf = StringIO.StringIO()
-#                owner.passport = db.Blob(open(p.value, "rb").read())
 #                owner.passport = db.Blob(p)
                 owner.passport = p
 #                owner.passport = base64.b64encode(p)
-#                owner.passport = p.value
-#                owner.passport = db.Blob(p.value)
-#                owner.passport = db.Blob(str(p.value))
-#                owner.passport = db.Blob(str(p))
-                # p = Passport()
-                # p.content = db.Blob(str(passport))
-                # p.owner = owner.key()
-                # p.put()
-
-
-# ---------
-
-#  output = StringIO.StringIO()
-
-#     try:
-#         client.convertURI("example.com", output)
-#         Report.pdf = db.Blob(output.getvalue())
-#         Report.put()  
-#     except pdfcrowd.Error, why:
-#         logging.error('PDF creation failed %s' % why)
-
-# --------------
 
             owner.put()
 
@@ -358,10 +332,7 @@ class EditedHandler(webapp2.RequestHandler):
             director.company = company.key()
             passport = self.request.get('passport')
             if passport:
-                #pass
-                director.passport = db.Blob(str(passport))
-#                director.passport = str(passport.get_content())
-#                director.passport = db.Blob(passport)
+                director.passport = passport
 
             director.put()
 
@@ -644,6 +615,7 @@ app = webapp2.WSGIApplication([
         ('/owners/(.*)',OwnersHandler),
         ('/owner/(.*)',OwnerHandler),
         ('/directors/(.*)',DirectorsHandler),
+        ('/director/(.*)',DirectorHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
 

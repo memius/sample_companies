@@ -1,3 +1,27 @@
+save the candies.
+
+
+address, country, etc. are not stored when you add a new company
+online and locally. add
+these attributes somewhere!
+
+
+-d, --data-binary and --data-urlencode to post data with curl. @ for
+ file to read from (NOT upload?). yes, use --data-binary with @ and
+ filename for
+ file upload.
+
+-X means request, so -X POST or -X GET. not really needed?
+
+
+
+
+btw, add the pdf functionality for directors as well. now, it's only owners.
+
+you have curl for displaying companies and company. make it for
+editing company, adding company and for attaching pdfs to owners and directors.
+
+
 hva med å bare gjøre 
 
 self.response.write(pdf) i ownerhandler? det er kanskje det riktigste.

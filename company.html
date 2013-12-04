@@ -23,7 +23,7 @@
     <p>
     <p>Directors:
       {% for director in company.directors %}
-      {{ director.name }}, 
+      <a href="/director/{{ director.key().id() }}">{{ director.name }}</a>
       {% endfor %}
     <p>
       <a href="/edit/{{ company.key().id() }}">Edit</a>
