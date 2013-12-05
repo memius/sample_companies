@@ -1,3 +1,15 @@
+ADDING AN OWNER OR A DIRECTOR:
+
+curl -d owner_name="[new owner name]" -d company_id=[company id]   I think.
+
+ curl localhost:8080/owner/25 --form owner_name="sammy --form press="Add Owner"
+
+but it doesn't work. you need the owner id, and you won't bother to
+rearchitect you whole page again.
+
+
+
+
 405 post not allowed for this resource when uploading pdf. wtf?
 because of a goddamn '/' in the handler definition.
 

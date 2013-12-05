@@ -1,0 +1,116 @@
+Assignment done. It was a fun task!
+
+The code is hosted at github.com/memius/sample_companies
+
+The client is deployed on google appengine, and is served from
+
+transfarmr.dictatr.com
+
+I will host the app I made for you at that URL for the next week or
+so. After that, the address will go back to hosting the webapp I'm
+currently working on.
+
+The Sample Companies webapp is written in Python, using Google
+Appengine with webapp2. The client is written in Python, using the
+webapp2 html template language.
+
+I have not implemented versioning of the data themselves, becuause it
+was not trivial to do that in appengine.
+
+The database contains many more or less complete companies. Please
+make your own, and see that things work.
+
+For authentication, I would use Google login for a consumer webapp,
+because it's dead easy on Appengine. For an inhouse app for a specific
+company, I would incorporate their own method. If they did not have a
+good one, I would recommend using Google's authentication.
+
+As for redundancy, Google handles that seamlessly for any Appengine
+app with their disaster recovery systems.
+
+
+
+THE CURL INTERFACE:
+
+
+VIEWING ALL COMPANIES:
+
+Syntax for viewing all companies with curl:
+
+curl transfarmr.dictatr.com/companies
+
+This will give you the company ids for all the companies.
+
+
+
+VIEWING ONE COMPANY:
+
+Syntax for viewing one company with curl (you will need the company id
+- see above):
+
+curl transfarmr.dictatr.com/company/[company id]
+
+The company id as always an integer. for example, the id for the
+company Facebook Inc is 117008, so that would be:
+
+curl transfarmr.dictatr.com/company/117008
+
+This view will give you the ids of the owners and directors of the
+company. This is used when you want to upload a passport pdf file for
+them with curl.
+
+
+
+EDITING A COMPANY:
+
+Syntax for editing a company with curl (again, you will need the
+company id):
+
+curl transfarmr.dictatr.com/edited -d company_id=[company id] -d address="Bourbon Street"
+
+The first bit of data; the company id, is required. after that, just
+add on as many attributes as you want to change. No other fields will change.
+
+
+
+ADDING A COMPANY:
+
+Minimum syntax for adding a company:
+
+curl transfarmr.dictatr.com/added -d company_id=[company id]
+
+More relevant example:
+
+curl transfarmr.dictatr.com/added -d name="International Business
+Machine Corporation" -d address="116 bourbon street" -d city="NYC"
+-d country="USA" -d email="tom@gmail.com" -d phone_number=83838383
+
+In the client, you are reqired to fill in the first four
+fields. However, with curl, you can add a company without any of the
+required fields, as long as you fill in at least one field. This means
+you could end up with nameless companies. These will show up as None
+in the client. 
+
+
+
+ATTACHING A PDF PASSPORT:
+
+For this, you will need the id of the owner or director you wish to
+attach a pdf passport to. This is found in the company view (see
+above).
+
+Syntax for uploading a pdf file:
+
+curl --form passport=@"/path/to/filename.pdf"
+ --form press="Upload" localhost:8080/owneredited/[owner id]
+
+For directors, the URL will be "directoredited" instead of "owneredited".
+
+If you upload a new passport file, it will overwrite the old file silently.
+
+
+
+I have skipped making a curl interface for owner and director
+adding. It was not mentioned in the spec, and it was impractical there
+and then.
+

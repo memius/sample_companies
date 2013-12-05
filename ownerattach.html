@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+
+  <body>
+      <form action="/owneredited/{{ owner.key().id() }}" method="post" enctype="multipart/form-data">
+	Upload passport file for owner <b> {{ owner.name }}: </b>
+	<input type="file" name="passport">
+	<input type="hidden" name="owner_id" value="{{ owner.key().id() }}">
+	<br>
+	<input type="submit" name="press" value="Upload">
+      </form>
+  </body>
+</html>

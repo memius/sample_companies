@@ -320,8 +320,8 @@ class OwnerEditedHandler(webapp2.RequestHandler):
         self.redirect("owner/" + str(owner_id))
 
 class DirectorEditedHandler(webapp2.RequestHandler):
-    def post(self):
-        director_id = self.request.get('director_id')
+    def post(self,director_id):
+#        director_id = self.request.get('director_id')
         director = Director.get_by_id(int(director_id))
         p = self.request.get('passport') # should give me the value/content/data of the file
         director.passport = p
