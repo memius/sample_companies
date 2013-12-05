@@ -1,10 +1,76 @@
+have a page that displays owner names, and let the user upload pdf
+from there.
+
+      <a href="/attach/{{ owner_name }}">Upload passport</a>
+
+
+	<input type="hidden" name="company_id" value="{{ company.key().id() }}">
+
+
+
+you need to have the upload passport button/link in edit, not attached
+to a user. the users must be listed in attach.html, and chosen, maybe
+with radio buttons?
+
+if you press the attach passport link before you press the done
+editing button, the owner will not be stored.
+
+can you use his name instead? i think so.
+
+you want to send the owner id to attach.html, so that it knows which
+owner to attach to. however, in the owners.html, you are adding a new
+owner, so he has not been stored yet (this happens in edited, in
+main), and you don't have his id.
+
+
+
+
+let the attach link in owners.html take you to /attach/[owner id], where you can
+upload the file.
+
+
+you need to be able to attach pdf to an already existing owner.
+
+so you need to add owners and directors separate to attaching pdfs.
+
+try adding the owners and directors in the edit view? no, make an
+additional button or link to attach pdfs to them.
+
+
+
+
+locally:
+når man fyller i alle feltene funker det perfekt.
+når man unnlater ett required så:
+-i klienten får man beskjed om det.
+-i curl får man ikke beskjed, og den man unnlater mangler
+simpelthen. ellers alt vel. dvs. at man kan unnlate å fylle inn
+required felter gjennom curl.
+
+online:
+fyll i alle feltene: alt vel.
+-unnlat ett required: får beskjed.
+
+-unnlat email eller phone: fail fordi ingen verdi til
+self.request.get. må altså ha: if phone, if email. alle, ikke bare de
+to, siden curl kan unnlate å fylle i required.
+
+
+addhandler is redundant.
+
+online, only name and city is stored, even if you include more
+attributes. not even when you include all the attributes. hm. have you
+updated the online version?
+
+only name and city are stored when using curl to add company. why?
+because if you don't include all the attributes, (email and phone
+number as well), it fails (silently online, storing only what you
+included - with error message locally, without storing anything.
+
+
+
+
 save the candies.
-
-
-address, country, etc. are not stored when you add a new company
-online and locally. add
-these attributes somewhere!
-
 
 -d, --data-binary and --data-urlencode to post data with curl. @ for
  file to read from (NOT upload?). yes, use --data-binary with @ and
@@ -15,6 +81,9 @@ these attributes somewhere!
 
 
 
+address, country, etc. are not stored when you add a new company
+online and locally. add
+these attributes somewhere!
 
 btw, add the pdf functionality for directors as well. now, it's only owners.
 

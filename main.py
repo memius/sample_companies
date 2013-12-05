@@ -188,12 +188,41 @@ class AddedHandler(webapp2.RequestHandler):
     def post(self):
         company = Company()
 
-        company.name = self.request.get('name') 
-        company.address = self.request.get('address') 
-        company.city = self.request.get('city') 
-        company.country = self.request.get('country') 
-        company.email = self.request.get('email') 
-        company.phone_number = int(self.request.get('phone_number'))
+        try:
+            name = self.request.get('name') 
+            company.name = name
+        except:
+            pass
+
+        try:
+            address = self.request.get('address') 
+            company.address = address
+        except:
+            pass
+
+        try:
+            city = self.request.get('city') 
+            company.city = city
+        except:
+            pass
+
+        try:
+            country = self.request.get('country') 
+            company.country = country
+        except:
+            pass
+
+        try:
+            email = self.request.get('email') 
+            company.email = email
+        except:
+            pass
+
+        try:
+            phone_number = int(self.request.get('phone_number'))
+            company.phone_number = phone_number
+        except:
+            pass
 
         company.put()
 
@@ -217,8 +246,8 @@ class PassportHandler (webapp2.RequestHandler):
     #    self.error(404)
 
 class OwnersHandler(webapp2.RequestHandler): # lets you add an owner
-    def get(self,owners_id):
-        company = Company.get_by_id(int(owners_id))
+    def get(self,company_id):
+        company = Company.get_by_id(int(company_id))
 
         template_values = {
             'company' : company
@@ -242,17 +271,30 @@ class OwnerHandler(webapp2.RequestHandler): # shows the passport of one owner (o
     def get(self,owner_id):
         owner = Owner.get_by_id(int(owner_id))
 
-#        sizes = [sys.getsizeof(owner.name),sys.getsizeof(owner.passport)]
+        if owner.passport:
+            self.response.headers['Content-Type']="application/pdf"
+            self.response.write(owner.passport)
+        else:
+            template_values = {
+                'owner' : owner 
+                }
 
-        self.response.headers['Content-Type']="application/pdf"
-
-        self.response.write(owner.passport)
+            template = jinja_environment.get_template('ownerattach.html')
+            self.response.out.write(template.render(template_values))
 
 class DirectorHandler(webapp2.RequestHandler):
     def get(self,director_id):
         director = Director.get_by_id(int(director_id))
-        self.response.headers['Content-Type']="application/pdf"
-        self.response.write(director.passport)
+        if director.passport:
+            self.response.headers['Content-Type']="application/pdf"
+            self.response.write(director.passport)
+        else:
+            template_values = {
+                'director' : director 
+                }
+
+            template = jinja_environment.get_template('directorattach.html')
+            self.response.out.write(template.render(template_values))
 
 class EditHandler(webapp2.RequestHandler):
     def get(self,edit_id):
@@ -267,8 +309,24 @@ class EditHandler(webapp2.RequestHandler):
 
 #    def post(self,edit_id):
         # takes care of uploading passport pdf and entering name of owners, directors
-        
 
+class OwnerEditedHandler(webapp2.RequestHandler):
+    def post(self):
+        owner_id = self.request.get('owner_id')
+        owner = Owner.get_by_id(int(owner_id))
+        p = self.request.get('passport') # should give me the value/content/data of the file
+        owner.passport = p
+        owner.put()
+        self.redirect("owner/" + str(owner_id))
+
+class DirectorEditedHandler(webapp2.RequestHandler):
+    def post(self):
+        director_id = self.request.get('director_id')
+        director = Director.get_by_id(int(director_id))
+        p = self.request.get('passport') # should give me the value/content/data of the file
+        director.passport = p
+        director.put()
+        self.redirect("director/" + str(director_id))
 
 class EditedHandler(webapp2.RequestHandler):
     def post(self):
@@ -314,28 +372,17 @@ class EditedHandler(webapp2.RequestHandler):
             owner = Owner()
             owner.name = owner_name
             owner.company = company.key()
-
+            owner.put()
             # this should work, according to nick johnson. why doesn't it?:
 #            p = self.request.POST['passport'] # should give me both value and mimetype (p.value and p.type)
-            p = self.request.get('passport') # should give me the value/content/data of the file
-            if p:
-#                owner.passport = db.Blob(p)
-                owner.passport = p
-#                owner.passport = base64.b64encode(p)
-
-            owner.put()
 
         director_name = self.request.get('director_name')
         if director_name:
             director = Director()
             director.name = director_name
             director.company = company.key()
-            passport = self.request.get('passport')
-            if passport:
-                director.passport = passport
-
             director.put()
-
+        
         # p = Passport()
         # p.content = db.Blob(str(passport))
         # p.company = company.key()
@@ -345,6 +392,30 @@ class EditedHandler(webapp2.RequestHandler):
 
         # self.redirect(self.request.url) # redirect back to same page
         self.redirect("company/" + str(company_id))
+
+class OwnerAttachHandler(webapp2.RequestHandler):
+    def post(self,owner_id):
+        
+        owner = Owners.filter("name= ",owner_id)
+
+        template_values = {
+            'owner' : owner
+            }
+
+        template = jinja_environment.get_template('attach.html')
+        self.response.out.write(template.render(template_values))
+
+class DirectorAttachHandler(webapp2.RequestHandler):
+    def post(self,director_id):
+        
+        director = Directors.filter("name= ",director_id)
+
+        template_values = {
+            'director' : director
+            }
+
+        template = jinja_environment.get_template('attach.html')
+        self.response.out.write(template.render(template_values))
 
 class CompanyClickHandler(webapp2.RequestHandler):
     def get(self,company_id): # apparently, it must be company_id, not something else.
@@ -614,8 +685,12 @@ app = webapp2.WSGIApplication([
         ('/passport/(.*)', PassportHandler),
         ('/owners/(.*)',OwnersHandler),
         ('/owner/(.*)',OwnerHandler),
+        ('/owneredited',OwnerEditedHandler),
         ('/directors/(.*)',DirectorsHandler),
         ('/director/(.*)',DirectorHandler),
+        ('/directoredited',DirectorEditedHandler),
+        ('/ownerattach/(.*)', OwnerAttachHandler),
+        ('/directorattach/(.*)', DirectorAttachHandler),
         ('/.*', MainPage),
         ], debug=True) #remove debug in production
 

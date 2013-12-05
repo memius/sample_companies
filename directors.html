@@ -4,16 +4,15 @@
   </head>
 
   <body>
-      <form action="/edited" method="post" enctype="multipart/form-data">
-	Choose passport file for director:
-	<input type="file" name="passport">
-	<input type="hidden" name="company_id" value="{{ company.key().id() }}">
-	<br>
+      <form action="/edited" method="post">
 	<LABEL for="director">Director name: </LABEL>
 	<input type="text" name="director_name">
 	<br>
+	<input type="hidden" name="company_id" value="{{ company.key().id() }}">
 	<input type="submit" value="Done Editing">
       </form>
+
   </body>
 </html>
+
 
