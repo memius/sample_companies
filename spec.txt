@@ -1,3 +1,24 @@
+405 post not allowed for this resource when uploading pdf. wtf?
+because of a goddamn '/' in the handler definition.
+
+
+
+
+
+slik ser post'en min ut: (før owneredited ble til owneredited/35):
+http://localhost:8080/owneredited?passport=erik-thomas8-cropped.pdf&owner_id=35
+
+enten:
+
+curl localhost:8080/owneredited --data-binary passport=@"erik-thomas8-cropped.pdf"
+-d owner_id=35 
+
+eller:
+
+curl -d owner_id=35 --form passport=@"erik-thomas8-cropped.pdf" --form press="Upload"
+localhost:8080/owneredited
+
+
 have a page that displays owner names, and let the user upload pdf
 from there.
 

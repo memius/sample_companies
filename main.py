@@ -311,8 +311,8 @@ class EditHandler(webapp2.RequestHandler):
         # takes care of uploading passport pdf and entering name of owners, directors
 
 class OwnerEditedHandler(webapp2.RequestHandler):
-    def post(self):
-        owner_id = self.request.get('owner_id')
+    def post(self,owner_id):
+#        owner_id = self.request.get('owner_id')
         owner = Owner.get_by_id(int(owner_id))
         p = self.request.get('passport') # should give me the value/content/data of the file
         owner.passport = p
@@ -685,10 +685,11 @@ app = webapp2.WSGIApplication([
         ('/passport/(.*)', PassportHandler),
         ('/owners/(.*)',OwnersHandler),
         ('/owner/(.*)',OwnerHandler),
-        ('/owneredited',OwnerEditedHandler),
+#        ('/owneredited/(.*)',OwnerEditedHandler),
+        ('/owneredited/(.*)',OwnerEditedHandler),
         ('/directors/(.*)',DirectorsHandler),
         ('/director/(.*)',DirectorHandler),
-        ('/directoredited',DirectorEditedHandler),
+        ('/directoredited/(.*)',DirectorEditedHandler),
         ('/ownerattach/(.*)', OwnerAttachHandler),
         ('/directorattach/(.*)', DirectorAttachHandler),
         ('/.*', MainPage),
