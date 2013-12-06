@@ -5,7 +5,7 @@
 
   <body>
       <form action="/directoredited/{{ director.key().id() }}" method="post" enctype="multipart/form-data">
-	Upload passport file for director {{ director.name }}:
+	Upload passport file for director <b> {{ director.name }}: </b>
 	<input type="file" name="passport">
 	<input type="hidden" name="director_id" value="{{ director.key().id() }}">
 	<br>

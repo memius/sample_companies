@@ -68,7 +68,7 @@ ADDING A COMPANY:
 
 Minimum syntax for adding a company:
 
-curl transfarmr.dictatr.com/added -d company_id=[company id]
+curl transfarmr.dictatr.com/added -d name="Smart Corp"
 
 More relevant example:
 
@@ -88,7 +88,7 @@ ADDING AN OWNER OR DIRECTOR:
 
 Syntax for adding an owner (you need the company id):
 
-curl localhost:8080/edited -d owner_name="ramon hines" -d company_id=25
+curl transfarmr.dictatr.com/edited -d owner_name="ramon hines" -d company_id=25
 
 
 
